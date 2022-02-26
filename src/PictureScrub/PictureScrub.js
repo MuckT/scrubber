@@ -1,12 +1,14 @@
-import React, { useEffect} from 'react'
-import { SafeAreaView, Text, StyleSheet, StatusBar, TouchableOpacity, FlatList, Image, View } from 'react-native'
+import React, { useEffect } from 'react';
+import { FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectImages, setActiveImage } from './reducer';
-import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
 
 
 const PictureScrub = () => {
   const dispatch = useDispatch()
+  const navigation = useNavigation()
   const activeImage = useSelector(state => state.pictureScrub.activeImage)
   const selectedImages = useSelector(state => state.pictureScrub.selectedImages)
 
@@ -20,6 +22,7 @@ const PictureScrub = () => {
 
   const chooseImage = (id) => {
     dispatch(setActiveImage(id))
+    navigation.navigate('Image Details')
   }  
 
   // Just some logs to view current value of selectedImages & activeImage

@@ -13,7 +13,7 @@ export const pictureScrubSlice = createSlice({
       state.selectedImages = action.payload
     },
     setActiveImage: (state, action) => {
-      state.activeImage = action.payload
+      state.activeImage = state.selectedImages.find(img => img.localIdentifier === action.payload)
     }
   }
 })
