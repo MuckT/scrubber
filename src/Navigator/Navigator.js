@@ -12,7 +12,6 @@ export default function MyNavigation() {
       <Drawer.Screen name="Image Selection" component={PictureScrub} />
       <Drawer.Screen name="Image Details" component={ImageDetails} />
       <Drawer.Screen name="About" component={About} />
-      
     </Drawer.Navigator>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, Pressable, TouchableOpacity, View } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectImages, setActiveImage } from './reducer';
@@ -14,7 +14,9 @@ const PictureScrub = () => {
 
   const chooseImages = () => {
     ImagePicker.openPicker({
-      multiple: true
+      multiple: true,
+      includeExif: true,
+      includeBase64: true
     }).then(images => {
       dispatch(selectImages(images))
     });   
@@ -25,23 +27,35 @@ const PictureScrub = () => {
     navigation.navigate('Image Details')
   }  
 
-  // Just some logs to view current value of selectedImages & activeImage
-  useEffect(() => console.log('Selected Images', selectedImages, selectedImages.length), [selectedImages]);
-  useEffect(() => console.log('Active Images', activeImage), [activeImage]);
+  // Just debugging logs to view current value of selectedImages & activeImage
+  // useEffect(() => console.log('Selected Images', selectedImages, selectedImages.length), [selectedImages]);
+  // useEffect(() => console.log('Active Images', activeImage), [activeImage]);
 
   return (
     <SafeAreaView style={styles.container} scrollIndicatorInsets={{ right: 1 }}>
-      <TouchableOpacity onPress={() => chooseImages()}>
-        <Text style={styles.title}>Select Image(s)</Text>
-      </TouchableOpacity>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={selectedImages}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => chooseImage(item.localIdentifier)} >
-            <Image source={{ uri: item.sourceURL }} style={styles.image} />
-          </TouchableOpacity>
-        )} />
+      <View style={{paddingTop: 10}}>
+        <Pressable 
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed
+                  ? 'rgb(210, 230, 255)'
+                  : 'white'
+              },
+              styles.wrapperCustom
+            ]}
+            onPress={() => chooseImages()}
+          >
+          <Text style={styles.button}>Select Image(s)</Text>
+        </Pressable>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={selectedImages}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => chooseImage(item.localIdentifier)} >
+              <Image source={{ uri: item.sourceURL }} style={styles.image} />
+            </TouchableOpacity>
+          )} />
+      </View>
     </SafeAreaView>
   )
 }
@@ -54,14 +68,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20
   },
-  title: {
+  button: {
     fontSize: 24,
     padding: 8,
-    backgroundColor: 'lightgreen',
     borderRadius: 10,
     borderWidth: 1,
     overflow: 'hidden',
-    marginVertical: 10,
+    textAlign: 'center'
+  },
+  wrapperCustom: {
+    borderRadius: 10,
   },
   image: {
     resizeMode: 'contain',
