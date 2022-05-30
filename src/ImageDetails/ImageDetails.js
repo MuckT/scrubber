@@ -3,8 +3,9 @@ import { Image, SafeAreaView, StatusBar, StyleSheet, Text, Pressable } from 'rea
 import { ScrollView } from 'react-native-gesture-handler'
 import { useSelector } from 'react-redux'
 import RNFS from 'react-native-fs';
-import { makeDirectory, saveCopyToCameraRoll  } from '../Utils/SaveUtils'
+import { getFileExtension, makeDirectory, saveCopyToCameraRoll  } from '../Utils/FileUtils'
 import { removeExif } from '../Utils/ExifUtils'
+import { convertFromHeic } from '../Utils/ConverstionUtils'
 
 
 const ImageDetails = () => {
@@ -19,7 +20,21 @@ const ImageDetails = () => {
   const saveFile = async () => {
     try {
       setSaving(true)
-      let cleaned = await removeExif(activeImage.sourceURL)
+      let cleaned
+      let fileType = getFileExtension(activeImage.sourceURL)
+      switch(fileType) {
+        case 'jpg':
+        case 'jpeg':
+          cleaned = await removeExif(activeImage.sourceURL)
+          break;
+        case 'heic':
+          let result = await convertFromHeic(activeImage.sourceURL)
+          cleaned = await removeExif(result)
+          break;
+        default:
+          console.warn('File Type Not Supported')
+          return;
+      }
       await saveCopyToCameraRoll(cleaned)
     } catch(error) {
       console.warn(error)
