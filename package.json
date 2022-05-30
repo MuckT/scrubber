@@ -16,7 +16,6 @@
     "@react-navigation/native": "^6.0.10",
     "@reduxjs/toolkit": "^1.8.2",
     "fbjs": "^3.0.4",
-    "image-to-base64": "^2.2.0",
     "piexifjs": "^1.0.6",
     "react": "17.0.2",
     "react-native": "0.66.4",
