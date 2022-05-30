@@ -16,6 +16,14 @@ export const makeDirectory = async (folderPath) => {
   await RNFS.mkdir(folderPath); 
 };
 
+export const readFile = async (filePath) => {
+  try {
+    return await RNFS.readFile(filePath, 'base64')
+  } catch (error) {
+    console.warn(error)
+  }
+}
+
 // Moves a temporary file to the users Camera roll
 export const saveCopyToCameraRoll = async (imageData) => {
   try {
@@ -26,6 +34,14 @@ export const saveCopyToCameraRoll = async (imageData) => {
     await makeTempFile(fileLocation, toSave)
     await CameraRoll.save(fileLocation, 'photo')
   } catch (error){
+    console.warn(error)
+  }
+}
+
+export const getFileExtension = (filePath) => {
+  try {
+    return filePath.substring(filePath.lastIndexOf('.')+1, filePath.length).toLowerCase() || filePath.toLowerCase();
+  } catch (error) {
     console.warn(error)
   }
 }
